@@ -1,0 +1,746 @@
+---
+title: "Untitled"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+rm(list=ls())
+bcd <- read.csv("A:/Dissertation/data.csv", header=T, stringsAsFactors=F)
+bcd
+```
+
+```{r}
+#Removing NULL Values
+bcd$X <- NULL
+```
+
+
+```{r}
+#Reshaping the dataset
+bcd <- bcd[,-1]
+bcd$diagnosis <- factor(ifelse(bcd$diagnosis == "B","Benign","Malignant"))
+```
+
+```{r}
+str(bcd)
+```
+
+```{r}
+summary(bcd)
+```
+
+```{r}
+head(bcd)
+```
+
+
+```{r}
+library(PerformanceAnalytics)
+```
+
+```{r}
+chart.Correlation(bcd[,c(2:11)],histogram=TRUE, col="pink", pch=1, main="Cancer Mean")
+
+```
+
+```{r}
+library(ggplot2)
+library(GGally)
+library(Rcpp)
+ggpairs(bcd[,c(22:31)],)+ theme_bw()+
+labs(title="Cancer Worst")+
+theme(plot.title=element_text(face='bold',color='pink',hjust=0.5,size=13))
+```
+
+```{r}
+#Mean
+
+ggpairs(bcd[,c(2:11,1)], aes(color=diagnosis, alpha=0.75), lower=list(continuous="smooth"))+ theme_bw()+
+labs(title="Cancer Mean")+
+theme(plot.title=element_text(face='bold',color='pink',hjust=0.5,size=12))
+```
+
+```{r}
+#SE
+
+ggpairs(bcd[,c(12:21,1)], aes(color=diagnosis, alpha=0.75), lower=list(continuous="smooth"))+ theme_bw()+
+labs(title="Cancer SE")+
+theme(plot.title=element_text(face='bold',color='pink',hjust=0.5,size=12))
+```
+
+```{r}
+#Worst
+
+ggpairs(bcd[,c(22:31,1)], aes(color=diagnosis, alpha=0.75), lower=list(continuous="smooth"))+ theme_bw()+
+labs(title="Cancer Worst")+
+theme(plot.title=element_text(face='bold',color='pink',hjust=0.5,size=12))
+```
+
+#GGCORR PLOT
+```{r}
+#MEAN
+
+ggcorr(bcd[,c(2:11)], name = "corr", label = TRUE)+
+  theme(legend.position="none")+
+labs(title="Cancer Mean")+
+theme(plot.title=element_text(face='bold',color='black',hjust=0.5,size=12))
+```
+
+```{r}
+#SE
+
+ggcorr(bcd[,c(12:21)], name = "corr", label = TRUE)+
+  theme(legend.position="none")+
+labs(title="Cancer SE")+
+theme(plot.title=element_text(face='bold',color='black',hjust=0.5,size=12))
+```
+
+```{r}
+#WORST
+
+ggcorr(bcd[,c(22:31)], name = "corr", label = TRUE)+
+  theme(legend.position="none")+
+labs(title="Cancer Worst")+
+theme(plot.title=element_text(face='bold',color='black',hjust=0.5,size=12))
+```
+
+```{r}
+library(factoextra)
+bcd_pca <- transform(bcd) 
+```
+
+```{r}
+#PCA CUMMULATIVE PROPORTION
+
+all_pca <- prcomp(bcd_pca[,-1], cor=TRUE, scale = TRUE)
+summary(all_pca)
+```
+
+```{r}
+#MEAN
+
+mean_pca <- prcomp(bcd_pca[,c(2:11)], scale = TRUE)
+summary(mean_pca)
+```
+
+```{r}
+#SE
+
+se_pca <- prcomp(bcd_pca[,c(12:21)], scale = TRUE)
+summary(se_pca)
+```
+
+```{r}
+#WORST
+
+worst_pca <- prcomp(bcd_pca[,c(22:31)], scale = TRUE)
+summary(worst_pca)
+```
+
+```{r}
+library(purrr)
+#SCREEN PLOT
+
+fviz_eig(all_pca, addlabels=TRUE, ylim=c(0,60), geom = c("bar", "line"), barfill = "pink", barcolor="grey",linecolor = "red", ncp=10)+
+labs(title = "Cancer All Variances - PCA",
+         x = "Principal Components", y = "% of variances")
+```
+
+```{r}
+#MEAN
+
+fviz_eig(mean_pca, addlabels=TRUE, ylim=c(0,60), geom = c("bar", "line"), barfill = "pink", barcolor="grey",linecolor = "red", ncp=10)+
+labs(title = "Cancer Mean Variances - PCA",
+         x = "Principal Components", y = "% of variances")
+```
+
+```{r}
+#SE
+
+fviz_eig(se_pca, addlabels=TRUE, ylim=c(0,60), geom = c("bar", "line"), barfill = "pink", barcolor="grey",linecolor = "red", ncp=10)+
+labs(title = "Cancer SE Variances - PCA",
+         x = "Principal Components", y = "% of variances")
+```
+
+```{r}
+#WORST
+
+fviz_eig(worst_pca, addlabels=TRUE, ylim=c(0,60), geom = c("bar", "line"), barfill = "pink", barcolor="grey",linecolor = "red", ncp=10)+
+labs(title = "Cancer Worst Variances - PCA",
+         x = "Principal Components", y = "% of variances")
+```
+
+
+```{r}
+#ALL PCA VARIABLE
+
+all_var <- get_pca_var(all_pca)
+all_var
+```
+
+```{r}
+#MEAN
+
+mean_var <- get_pca_var(mean_pca)
+mean_var
+```
+
+```{r}
+#SE
+
+se_var <- get_pca_var(se_pca)
+se_var
+```
+
+```{r}
+#WORST
+
+worst_var <- get_pca_var(worst_pca)
+worst_var
+```
+
+```{r}
+#CORRILATION PLOT
+
+library("corrplot")
+corrplot(mean_var$cos2, is.corr=FALSE)
+```
+
+```{r}
+#CONTRIBUTION OF VARIABLES IN PCA
+
+corrplot(mean_var$contrib, is.corr=FALSE)   
+```
+
+```{r}
+#CONTRIBUTION OF VARIABLES IN PCA1 AND PCA2
+
+library(gridExtra)
+p1 <- fviz_contrib(mean_pca, choice="var", axes=1, fill="pink", color="grey", top=10)
+p2 <- fviz_contrib(mean_pca, choice="var", axes=2, fill="skyblue", color="grey", top=10)
+grid.arrange(p1,p2,ncol=2)
+```
+
+```{r}
+#ALL PCA
+
+set.seed(218)
+res.all <- kmeans(all_var$coord, centers = 6, nstart = 25)
+grp <- as.factor(res.all$cluster)
+
+fviz_pca_var(all_pca, col.var = grp, 
+             palette = "jco",
+             legend.title = "Cluster")
+```
+
+```{r}
+#MEAN
+
+set.seed(218)
+res.mean <- kmeans(mean_var$coord, centers = 3, nstart = 25)
+grp <- as.factor(res.mean$cluster)
+
+fviz_pca_var(mean_pca, col.var = grp, 
+             palette = "jco",
+             legend.title = "Cluster")
+```
+
+```{r}
+#SE
+
+set.seed(218)
+res.se <- kmeans(se_var$coord, centers = 4, nstart = 25)
+grp <- as.factor(res.se$cluster)
+
+fviz_pca_var(se_pca, col.var = grp, 
+             palette = "jco",
+             legend.title = "Cluster")
+```
+
+```{r}
+#WORST
+
+set.seed(218)
+res.worst <- kmeans(worst_var$coord, centers = 3, nstart = 25)
+grp <- as.factor(res.worst$cluster)
+
+fviz_pca_var(worst_pca, col.var = grp, 
+             palette = "jco",
+             legend.title = "Cluster")
+
+```
+
+```{r}
+#BIOPLOT
+
+library("factoextra")
+```
+
+```{r}
+#ALL
+
+fviz_pca_biplot(all_pca, col.ind = bcd$diagnosis, col="black",
+                palette = "jco", geom = "point", repel=TRUE,
+                legend.title="Diagnosis", addEllipses = TRUE)
+
+```
+
+```{r}
+#MEAN
+
+mean_pca <- prcomp(bcd_pca[,c(2:11)], scale = TRUE)
+summary(mean_pca)
+
+fviz_pca_biplot(mean_pca, col.ind = bcd$diagnosis, col="black",
+                palette = "jco", geom = "point", repel=TRUE,
+                legend.title="Diagnosis", addEllipses = TRUE)
+```
+
+```{r}
+#SE
+
+se_pca <- prcomp(bcd_pca[,c(12:21)], scale = TRUE)
+summary(se_pca)
+
+fviz_pca_biplot(se_pca, col.ind = bcd$diagnosis, col="black",
+                palette = "jco", geom = "point", repel=TRUE,
+                legend.title="Diagnosis", addEllipses = TRUE)
+```
+
+```{r}
+#WORST
+
+worst_pca <- prcomp(bcd_pca[,c(22:31)], scale = TRUE)
+summary(worst_pca)
+
+fviz_pca_biplot(worst_pca, col.ind = bcd$diagnosis, col="black",
+                palette = "jco", geom = "point", repel=TRUE,
+                legend.title="Diagnosis", addEllipses = TRUE)
+```
+
+
+```{r}
+#Preparing Data 
+
+nrows <- NROW(bcd)
+set.seed(218)                           ## fix random value
+index <- sample(1:nrows, 0.8 * nrows)   ## shuffle and divide
+
+#Train and Test data                   ## 569 test data (100%)
+train <- bcd[index,]                   ## 455 test data (80%)
+test <- bcd[-index,]                   ## 114 test data (20%)
+```
+
+```{r}
+#TRAIN
+prop.table(table(train$diagnosis))
+```
+
+```{r}
+#TEST
+prop.table(table(test$diagnosis))
+```
+
+#APPLYING CLASSFYING MACHINE LEARNING ALGORITHMS
+
+```{r}
+#Adaboost Model
+
+library(rpart)
+library(ada)
+library(caret)
+library(gplots)
+
+control <- rpart.control(cp = -1, maxdepth = 14,maxcompete = 1,xval = 0)
+learn_ada <- ada(diagnosis~., data = train, test.x = train[,-1], test.y = train[,1], type = "gentle", control = control, iter = 70)
+pre_ada <- predict(learn_ada, test[,-1])
+cm_ada <- confusionMatrix(pre_ada, test$diagnosis)
+cm_ada
+
+```
+
+```{r}
+#ROCR Adaboost Performance
+
+library(ROCR)
+
+pred_ada <- prediction(as.numeric(pre_ada), as.numeric(test$diagnosis))
+roc_ada <- performance(pred_ada, "tpr", "fpr")
+plot(roc_ada,
+     main = "Adaboost ROC Curve",
+     col = "red",
+     )
+abline(a=0, b=1)
+
+auc_knn <- performance(pred_ada,"auc")
+auc_knn <- unlist(slot(auc_knn, "y.values"))
+auc_knn <- round(auc_knn, 4)
+legend(.6,.2, auc_knn, title = "AUC ADA", cex = 0.8)
+```
+
+
+```{r}
+#KNN Tune Model
+
+library("highcharter")
+library(class)
+
+acc_test <- numeric() 
+
+for(i in 1:30){
+    predict <- knn(train=train[,-1], test=test[,-1], cl=train[,1], k=i, prob=T)
+    acc_test <- c(acc_test,mean(predict==test[,1]))
+}
+
+acc <- data.frame(k= seq(1,30), cnt = acc_test)
+
+opt_k <- subset(acc, cnt==max(cnt))[1,]
+sub <- paste("Optimal number of k is", opt_k$k, "(accuracy :", opt_k$cnt,") in KNN")
+
+library(highcharter)
+hchart(acc, 'line', hcaes(k, cnt)) %>%
+  hc_title(text = "Accuracy With Varying K (KNN)") %>%
+  hc_subtitle(text = sub) %>%
+  hc_add_theme(hc_theme_google()) %>%
+  hc_xAxis(title = list(text = "Number of Neighbors(k)")) %>%
+  hc_yAxis(title = list(text = "Accuracy"))
+
+pre_knn <- knn(train = train[,-1], test = test[,-1], cl = train[,1], k=opt_k$k, prob=T)
+cm_knn  <- confusionMatrix(pre_knn, test$diagnosis)
+cm_knn
+```
+
+```{r}
+#ROCR KNN Performance
+
+library(ROCR)
+pred_knn <- prediction(as.numeric(pre_knn), as.numeric(test$diagnosis))
+roc_knn <- performance(pred_knn, "tpr", "fpr")
+plot(roc_knn,
+     main = "K- Nearest Neighbour ROC",
+     col = "yellow")
+abline(a=0, b=1)
+
+auc_knn <- performance(pred_knn,"auc")
+auc_knn <- unlist(slot(auc_knn, "y.values"))
+auc_knn <- round(auc_knn, 4)
+legend(.6,.2, auc_knn, title = "AUC KNN", cex = 0.8)
+
+```
+
+```{r}
+#Logistic Regression Model
+
+fitControl <- trainControl(method="cv", number = 15, classProbs = TRUE, summaryFunction = twoClassSummary)
+model_logreg <- train(diagnosis~., data = train, method = "glm", 
+                         metric = "ROC", preProcess = c("scale", "center"), 
+                         trControl = fitControl)
+pre_logreg <- predict(model_logreg, test)
+cm_logreg <- confusionMatrix(pre_logreg, test$diagnosis)
+cm_logreg
+
+```
+
+```{r}
+#ROCR Logistic Regression Performance
+
+library(ROCR)
+
+pred_logreg <- prediction(as.numeric(pre_logreg), as.numeric(test$diagnosis))
+roc_logreg <- performance(pred_logreg, "tpr", "fpr")
+plot(roc_logreg,
+     main = "Logistic Regression ROC Curve",
+     col = "blue")
+abline(a=0, b=1)
+auc_logreg <- performance(pred_logreg,"auc")
+auc_logreg <- unlist(slot(auc_logreg, "y.values"))
+auc_logreg <- round(auc_logreg, 4)
+legend(.6,.2, auc_logreg, title = "AUC Log", cex = 0.8)
+
+```
+
+
+```{r}
+#Naive Bayes Model
+
+library(e1071)
+
+acc_test <- numeric()
+accuracy1 <- NULL; accuracy2 <- NULL
+
+for(i in 1:30){
+    learn_imp_nb <- naiveBayes(train[,-1], train$diagnosis,preProcess = c('center', 'scale', 'pca'), laplace=i)    
+    p_nb <- predict(learn_imp_nb, test[,-1]) 
+    accuracy1 <- confusionMatrix(p_nb, test$diagnosis)
+    accuracy2[i] <- accuracy1$overall[1]
+}
+
+acc <- data.frame(l= seq(1,30), cnt = accuracy2)
+
+opt_l <- subset(acc, cnt==max(cnt))[1,]
+sub <- paste("Optimal number of laplace is", opt_l$l, "(accuracy :", opt_l$cnt,") in naiveBayes")
+
+library(highcharter)
+hchart(acc, 'line', hcaes(l, cnt)) %>%
+  hc_title(text = "Accuracy With Varying Laplace (naiveBayes)") %>%
+  hc_subtitle(text = sub) %>%
+  hc_add_theme(hc_theme_google()) %>%
+  hc_xAxis(title = list(text = "Number of Laplace")) %>%
+  hc_yAxis(title = list(text = "Accuracy"))
+
+learn_nb <- naiveBayes(train[,-1], train$diagnosis)
+pre_nb <- predict(learn_nb, test[,-1])
+cm_nb <- confusionMatrix(pre_nb, test$diagnosis)        
+cm_nb
+```
+
+```{r}
+#ROCR Naive Bayes Performance
+library(ROCR)
+pred_nb <- prediction(as.numeric(pre_nb), as.numeric(test$diagnosis))
+roc_nb <- performance(pred_nb, "tpr", "fpr")
+plot(roc_nb,
+     main = "Naive Bayes ROC Curve",
+     col = "green")
+abline(a=0, b=1)
+auc_nb <- performance(pred_nb,"auc")
+auc_nb <- unlist(slot(auc_nb, "y.values"))
+auc_nb <- round(auc_nb, 4)
+legend(.6,.2, auc_nb, title = "AUC", cex = 0.8)
+```
+
+```{r}
+#Random Forest Model
+
+library(randomForest)
+learn_rf <- randomForest(diagnosis~., data=train, ntree=500, proximity=T, importance=T)
+pre_rf   <- predict(learn_rf, test[,-1])
+cm_rf    <- confusionMatrix(pre_rf, test$diagnosis)
+cm_rf
+
+```
+
+```{r}
+#ROCR Random Forest Performance
+
+library(ROCR)
+pred_rf <- prediction(as.numeric(pre_rf), as.numeric(test$diagnosis))
+roc_rf <- performance(pred_rf, "tpr", "fpr")
+plot(roc_rf,
+     main = "Random Forest ROC Curve",
+     col = "orange")
+abline(a=0, b=1)
+auc_rf <- performance(pred_rf,"auc")
+auc_rf <- unlist(slot(auc_rf, "y.values"))
+auc_rf <- round(auc_rf, 4)
+legend(.6,.2, auc_rf, title = "AUC", cex = 0.8)
+```
+
+
+```{r}
+#Support Vector Machine Model
+
+learn_svm <- svm(diagnosis~., data=train)
+pre_svm <- predict(learn_svm, test[,-1])
+cm_svm <- confusionMatrix(pre_svm, test$diagnosis)
+cm_svm
+```
+
+```{r}
+#ROCR Supprort Vector Machine Performance
+
+library(ROCR)
+pred_svm <- prediction(as.numeric(pre_svm), as.numeric(test$diagnosis))
+roc_svm <- performance(pred_svm, "tpr", "fpr")
+plot(roc_svm,
+     main = "Support Vector Machine ROC Curve",
+     col = "violet")
+abline(a=0, b=1)
+auc_svm <- performance(pred_svm,"auc")
+auc_svm <- unlist(slot(auc_svm, "y.values"))
+auc_svm <- round(auc_svm, 4)
+legend(.6,.2, auc_svm, title = "AUC", cex = 0.8)
+```
+
+```{r}
+#SVM TUNE Model
+
+gamma <- seq(0,0.1,0.005)
+cost <- 2^(0:5)
+parms <- expand.grid(cost=cost, gamma=gamma)    ## 231
+
+acc_test <- numeric()
+accuracy1 <- NULL; accuracy2 <- NULL
+
+for(i in 1:NROW(parms)){        
+        learn_svm <- svm(diagnosis~., data=train, gamma=parms$gamma[i], cost=parms$cost[i])
+        pre_svm <- predict(learn_svm, test[,-1])
+        accuracy1 <- confusionMatrix(pre_svm, test$diagnosis)
+        accuracy2[i] <- accuracy1$overall[1]
+}
+
+acc <- data.frame(p= seq(1,NROW(parms)), cnt = accuracy2)
+
+opt_p <- subset(acc, cnt==max(cnt))[1,]
+sub <- paste("Optimal number of parameter is", opt_p$p, "(accuracy :", opt_p$cnt,") in SVM")
+
+library(highcharter)
+hchart(acc, 'line', hcaes(p, cnt)) %>%
+  hc_title(text = "Accuracy With Varying Parameters (SVM)") %>%
+  hc_subtitle(text = sub) %>%
+  hc_add_theme(hc_theme_google()) %>%
+  hc_xAxis(title = list(text = "Number of Parameters")) %>%
+  hc_yAxis(title = list(text = "Accuracy"))
+
+learn_svm_tune <- svm(diagnosis~., data=train, cost=parms$cost[opt_p$p], gamma=parms$gamma[opt_p$p])
+pre_svm_tune <- predict(learn_svm_tune, test[,-1])
+cm_svm_tune <- confusionMatrix(pre_svm_tune, test$diagnosis)
+cm_svm_tune
+```
+
+```{r}
+#ROCR SVM Tune Performance
+
+library(ROCR)
+pred_svm_tune <- prediction(as.numeric(pre_svm_tune), as.numeric(test$diagnosis))
+roc_svm_tune <- performance(pred_svm_tune, "tpr", "fpr")
+plot(roc_svm_tune,
+     main = "Support Vector Machine ROC Curve",
+     col = "darkgoldenrod")
+abline(a=0, b=1)
+auc_svm_tune <- performance(pred_svm_tune,"auc")
+auc_svm_tune <- unlist(slot(auc_svm_tune, "y.values"))
+auc_svm_tune <- round(auc_svm_tune, 4)
+legend(.6,.2, auc_svm_tune, title = "AUC", cex = 0.8)
+```
+
+```{r}
+library(pROC)
+
+plot(roc_ada, lwd = 1.5, lty=15, main = "ROC of All Models", col = "red")
+plot(roc_knn, lwd = 1.5, add=TRUE, lty=15, col = "yellow")
+plot(roc_logreg, lwd = 1.5, add=TRUE, lty=15, col = "blue")
+plot(roc_nb, lwd = 1.5, add=TRUE, lty=15, col = "green")
+plot(roc_rf, lwd = 1.5, add=TRUE, lty=15, col = "dark orange")
+plot(roc_svm, lwd = 1.5, add=TRUE, lty=15, col= " violet")
+plot(roc_svm_tune, lwd = 1.5, add=TRUE, lty=15, col = "darkgoldenrod")
+legend(0.79, 0.53, legend = c("ADA", "KNN", "LogReg", "NB", "RF", "SVM", "SVMTune"),
+       lty = c(1,1,1), col = c("red", "yellow", "blue", "green", "orange"," violet", "darkgoldenrod"))
+
+
+
+```
+
+
+```{r}
+#Visualization of Model performance "#ed3b3b", "#0099ff"
+
+col <- c("#FF4500", "#FFC0CB")
+par(mfrow=c(3,3))
+fourfoldplot(cm_ada$table, color = col, conf.level = 0, margin = 1, main=paste("AdaBoost (",round(cm_ada$overall[1]*100),"%)",sep=""))
+fourfoldplot(cm_knn$table, color = col, conf.level = 0, margin = 1, main=paste("Tune KNN (",round(cm_knn$overall[1]*100),"%)",sep=""))
+fourfoldplot(cm_logreg$table, color = col, conf.level = 0, margin = 1, main=paste("Log Reg (",round(cm_logreg$overall[1]*100),"%)",sep=""))
+fourfoldplot(cm_nb$table, color = col, conf.level = 0, margin = 1, main=paste("NaiveBayes (",round(cm_nb$overall[1]*100),"%)",sep=""))
+fourfoldplot(cm_rf$table, color = col, conf.level = 0, margin = 1, main=paste("RandomForest (",round(cm_rf$overall[1]*100),"%)",sep=""))
+fourfoldplot(cm_svm$table, color = col, conf.level = 0, margin = 1, main=paste("SVM (",round(cm_svm$overall[1]*100),"%)",sep=""))
+fourfoldplot(cm_svm_tune$table, color = col, conf.level = 0, margin = 1, main=paste("Tune SVM (",round(cm_svm_tune$overall[1]*100),"%)",sep=""))
+```
+
+```{r}
+#Select Best Model
+
+opt_predict <- c( cm_ada$overall[1], cm_knn$overall[1], cm_logreg$overall[1], cm_nb$overall[1], cm_rf$overall[1],  cm_svm$overall[1], cm_svm_tune$overall[1])
+names(opt_predict) <- c("ada","knn","logreg","nb","rf","svm","svm_tune")
+best_predict_model <- subset(opt_predict, opt_predict==max(opt_predict))
+best_predict_model
+```
+
+
+```{r}
+#Preparing Data
+
+patient <- read.csv("A:/Dissertation/data.csv", header=T, stringsAsFactors=F)
+patient$X <- NULL
+```
+
+```{r}
+#MALIGNANT
+
+M <- patient[19,]               ## 19th patient
+M[,c(1,2)]                      ## Malignant
+```
+
+```{r}
+#BENING
+
+B <- patient[20,]               ## 20th patient          
+B[,c(1,2)]                      ## Benign
+```
+
+```{r}
+#Delete new added diagnostics
+
+M$diagnosis <- NULL
+B$diagnosis <- NULL
+```
+
+```{r}
+#Patient Cancer Diagnostics Prediction Test
+
+cdp_p <- function(new, method=learn_svm_tune) {
+    new_pre <- predict(method, new[,-1])
+    new_res <- as.character(new_pre)
+    return(paste("Patient ID: ",new[,1],"  =>  Result: ", new_res, sep=""))
+}
+
+# For final output
+
+cdp_s <- function(new, method=learn_svm_tune) {
+    new_pre <- predict(method, new[,-1])
+    new_res <- as.character(new_pre)
+    return(new_res)
+}
+```
+
+```{r}
+#TEST FUNCTION
+#BENING
+
+cdp_p(B)    
+
+#Using another Model
+
+cdp_p(B,learn_svm_tune)
+```
+
+```{r}
+#MALIGNANT
+
+cdp_p(M)
+
+#Using another Model
+
+cdp_p(M,learn_svm_tune) 
+```
+
+```{r}
+#Result Dataset
+
+library(kableExtra)
+#submission output using test data
+
+t <- patient[-index,]
+orgin <- t$diagnosis
+t$diagnosis <- NULL
+r <- cdp_s(t)
+
+sub <- data.frame(id=t$id, predict_diagnosis=ifelse(r=='Malignant','M','B'), orgin_diagnosis=orgin)
+sub$correct <- ifelse(sub$predict_diagnosis == sub$orgin_diagnosis, "True", "False")
+kable(head(sub,10))
+
+```
