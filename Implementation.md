@@ -2,9 +2,6 @@ Adaboost Algorithm
 
 Based on the methodology of Adaboost, we compute this model for breast cancer diagnostics data set. The aim is to evaluate the accuracy and the sensitivity with which the data is being processed and the efficiency of results generated 
  
-![Implementing Adaboost Algorithm using R](Images/) 
-
-
 
 Based on this research the results obtained on computation of Adaboost algorithm on breast cancer dataset is observed as follows:
 Table 1.  Confusion Matrix of Adaboost Algorithm
