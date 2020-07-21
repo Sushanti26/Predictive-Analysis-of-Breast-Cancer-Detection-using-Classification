@@ -1,7 +1,7 @@
 # **Implemenation Process**
 
 
-### **Adaboost Algorithm
+### Adaboost Algorithm
 
 Based on the methodology of Adaboost, we compute this model for breast cancer diagnostics data set. The aim is to evaluate the accuracy and the sensitivity with which the data is being processed and the efficiency of results generated 
  
@@ -29,7 +29,7 @@ In this plot we can see the ROC curve with the calculated AUC value. ROC represe
 
 
 
-###K-Nearest Neighbour Algorithm
+### K-Nearest Neighbour Algorithm
 
 Based on the methodology of K- Nearest Neighbour algorithm, we compute this model for breast cancer diagnostics data set. The aim is to evaluate the accuracy and the sensitivity with which the data is being processed and the efficiency of results generated. In this case instead of calculating the accuracy based on one single ‘K’ value we tune the data to compute the model using ‘n’ ‘K’ values. 
 
@@ -66,7 +66,7 @@ In this plot we can see the ROC curve with the calculated AUC value. ROC represe
 
 
 
-###Logistic Regression Algorithm
+### Logistic Regression Algorithm
 
 Based on the methodology of Logistic Regression algorithm, we compute this model for breast cancer diagnostics data set. The aim is to evaluate the accuracy and the sensitivity with which the data is being processed and the efficiency of results generated.
  
@@ -92,7 +92,7 @@ In this plot we can see the ROC curve with the calculated AUC value. ROC represe
 
 
 
-###Naïve Bayes Algorithm
+### Naïve Bayes Algorithm
 
 Based on the methodology of Naïve Bayes algorithm, we compute this model for breast cancer diagnostics data set. The aim is to evaluate the accuracy and the sensitivity with which the data is being processed and the efficiency of results generated. In this case we calculate the accuracy for the model with the Laplace range of 1-30 wherein it is observed that substantial accuracy is generated at the optimal value of 1 and is consistent till 30.
  
@@ -123,7 +123,7 @@ In this plot we can see the ROC curve with the calculated AUC value. ROC represe
 
 
 
-###Random Forest Algorithm
+### Random Forest Algorithm
 
 Based on the methodology of Random Forest algorithm, we compute this model for breast cancer diagnostics data set. The aim is to evaluate the accuracy and the sensitivity with which the data is being processed and the efficiency of results generated.
  
@@ -149,7 +149,7 @@ In this plot we can see the ROC curve with the calculated AUC value. ROC represe
 
 
 
-###Support Vector Machine Algorithm
+### Support Vector Machine Algorithm
 
 Based on the methodology of Support Vector Machine algorithm, we compute this model for breast cancer diagnostics data set. The aim is to evaluate the accuracy and the sensitivity with which the data is being processed and the efficiency of results generated.
 In this case we calculate SVM with a and without Tuning. First model generated is where there is no additional tuning applied to the features, whereas the second model represents the accuracy generated after effective tuning of the model.
@@ -178,7 +178,7 @@ In this plot we can see the ROC curve with the calculated AUC value. ROC represe
 
 
 
-###Model 2:
+### Model 2:
 
 For this SVM model we tune the data in order to obtain highest level of accuracy.
 
@@ -206,7 +206,7 @@ In this plot we can see the ROC curve with the calculated AUC value. ROC represe
 
 
 
-###Computing the optimal model for Diagnostics 
+### Computing the optimal model for Diagnostics 
 
 
 In this case we check which is the most accurate model for breast cancer diagnostics and test if the results derive on its implementation are quintessential.
