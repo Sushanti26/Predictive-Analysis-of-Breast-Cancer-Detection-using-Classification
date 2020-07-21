@@ -1,7 +1,7 @@
-#Implemenation Process
+# **Implemenation Process**
 
 
-###Adaboost Algorithm
+### **Adaboost Algorithm
 
 Based on the methodology of Adaboost, we compute this model for breast cancer diagnostics data set. The aim is to evaluate the accuracy and the sensitivity with which the data is being processed and the efficiency of results generated 
  
