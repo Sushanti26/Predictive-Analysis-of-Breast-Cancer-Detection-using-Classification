@@ -2,7 +2,7 @@
 
 Breast Cancer is one of the frequently detected cancer in the world. The majority of the victims of this cancer are usually women. There are two types of tumours that a present in the body: benign and malignant. Benign tumour is an inactive tumour that is formed by clustering of dead cells. Though it may lead to some lumps in the body, they are not life threatening and can be treated by medication or if causing pain, by surgically removing it. Malignant tumours on the other side are life threatening tumours. They are a formation of cancerous cells clustered together in one place, this if not detected and treated immediately can be fatal to health.
 
-![Benign Tumour and Malignant Tumour]()
+![Benign Tumour and Malignant Tumour](Images/Benign Tumor and Malignant Tumor.png)
 
 There are various tests that have been devised for detecting the presence of tumour, some of them are Ultrasound, Mammography, MRI, Fine Needle Aspiration, Cytology, Core-cut biopsy. But the most effective and recommended test is self-check which involves frequently checking your body for any unnatural lump formation. Breast cancer like the name suggests is found in breasts.
 
