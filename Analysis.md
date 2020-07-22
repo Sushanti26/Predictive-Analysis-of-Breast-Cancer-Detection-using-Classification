@@ -11,7 +11,7 @@ Based on this research the results obtained on computation of Adaboost algorithm
 Table 1.  Confusion Matrix of Adaboost Algorithm
 Prediction	Benign	Malignant
 Benign	      74	      2
-Malignant	     0	     38
+Malignant	    0	     38
 
 The above table represents the accuracy of data prediction carried out by Adaboost model. Here, we can observe an error where two PN predictions have been noted. This implies that the model contains minute but some level of error due to which an inaccurate result has been obtained.
 The accuracy and sensitivity observed are as follows
@@ -210,6 +210,13 @@ In this plot we can see the ROC curve with the calculated AUC value. ROC represe
 
 
 In this case we check which is the most accurate model for breast cancer diagnostics and test if the results derive on its implementation are quintessential.
- 
+
 ![Opm](Images/Implementation/OPM.png)
+
 Based on this we can conclude that SVM Tune is the most accurate and efficient model for diagnosing breast cancer based on the data acquired.
+
+
+
+
+
+
