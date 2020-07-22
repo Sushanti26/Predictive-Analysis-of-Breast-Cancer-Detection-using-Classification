@@ -212,6 +212,4 @@ In this plot we can see the ROC curve with the calculated AUC value. ROC represe
 In this case we check which is the most accurate model for breast cancer diagnostics and test if the results derive on its implementation are quintessential.
  
 ![Opm](Images/Implementation/OPM.png)
-
-
 Based on this we can conclude that SVM Tune is the most accurate and efficient model for diagnosing breast cancer based on the data acquired.
